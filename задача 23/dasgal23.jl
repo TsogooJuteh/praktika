@@ -1,16 +1,15 @@
-arr = Array{Int64}(undef, 12)
-length1 = length(arr)
-println(length1)
-for i in 1:length1
-    arr[i] = rand(1:5)
-end
-function recursive_sum!(x::Array{Int64}, len)
-    if len == 0
-        return 0
+using HorizonSideRobots
+
+function move_symmetrical!(robot, side)
+    if isborder(robot, side)
+        while !isborder(robot, inverse(side))
+            move!(robot, inverse(side))
+        end
+    else
+        move!(robot, side)
+        move_symmetrical!(robot, side)
+        move!(robot, side)
     end
-    return x[len] + recursive_sum!(x, len - 1)
 end
-for i in 1:length1
-    println(arr[i], " ")
-end
-println(recursive_sum!(arr, length1))
+
+inverse(side::HorizonSide) = HorizonSide((Int(side) +2) %4)
